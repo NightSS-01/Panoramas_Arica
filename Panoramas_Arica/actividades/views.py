@@ -1,3 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def panel_proveedor(request):
+    return render(request, 'actividades/panel.html')
