@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.templatetags.static import static
 
 
 class Actividad(models.Model):
@@ -31,6 +32,35 @@ class Actividad(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+    @property
+    def tiene_precio(self):
+        return bool(self.precio)
+
+    @property
+    def precio_texto(self):
+        if self.precio is None:
+            return 'Precio por confirmar'
+        if self.precio == 0:
+            return 'Sin costo'
+        return '$' + f'{self.precio:,}'.replace(',', '.')
+
+    @property
+    def primera_disponibilidad(self):
+        disponibles = list(self.disponibilidades.all())
+        return disponibles[0] if disponibles else None
+
+    @property
+    def es_reservable(self):
+        if self.modalidad == self.Modalidad.DIFUSION:
+            return False
+        return any(d.cupos > 0 for d in self.disponibilidades.all())
+
+    @property
+    def imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        return static('actividades/img/sin-imagen.png')
 
 
 class Disponibilidad(models.Model):
