@@ -613,3 +613,87 @@ textarea.campo__control {
 #detalle-desde[hidden] {
   display: none !important;
 }
+
+.campo__error {
+  color: #b42318;
+  font-size: 0.78rem;
+  margin-top: 0.35rem;
+}
+
+.campo__ayuda {
+  display: block;
+  color: #8a8a8a;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.lista-card__vacio {
+  margin: 0;
+  padding: 2rem 1.5rem;
+  color: #6b6b6b;
+}
+
+/* Enlaces con aspecto de botón de fila */
+a.btn-fila {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.fila-actividad__acciones form {
+  margin: 0;
+}
+
+/* Página de edición */
+.volver-enlace {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  color: #6b6b6b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.volver-enlace:hover {
+  color: var(--color-acento, #ee4d07);
+}
+
+.form-pagina {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 24px;
+  padding: 2rem;
+}
+
+.form-pagina__titulo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0.2rem 0 1.75rem;
+}
+
+.form-pagina__imagen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  background: #f1f1f1;
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+}
+
+.form-pagina__pie {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #ececec;
+}
+
+@media (max-width: 576px) {
+  .form-pagina { padding: 1.25rem; }
+}
