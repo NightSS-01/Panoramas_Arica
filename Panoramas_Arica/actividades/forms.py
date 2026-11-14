@@ -6,7 +6,10 @@ from .models import Actividad, Disponibilidad
 
 
 class ActividadForm(forms.ModelForm):
-    fecha = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    fecha = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+    )
     cupos = forms.IntegerField(
         required=False, min_value=0,
         widget=forms.NumberInput(attrs={'placeholder': 'Ej. 12', 'min': 0}),
@@ -22,6 +25,7 @@ class ActividadForm(forms.ModelForm):
                 'placeholder': 'Describe la experiencia, qué incluye y qué podrán descubrir…',
             }),
             'precio': forms.NumberInput(attrs={'placeholder': '$ CLP', 'min': 0}),
+            'imagen': forms.FileInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -33,9 +37,18 @@ class ActividadForm(forms.ModelForm):
             {'hidden': True, 'accept': 'image/jpeg,image/png'}
         )
 
+        # Al editar: precargar fecha y cupos de la primera disponibilidad
+        self._fecha_original = None
+        if self.instance.pk:
+            disponibilidad = self.instance.primera_disponibilidad
+            if disponibilidad:
+                self._fecha_original = disponibilidad.fecha
+                self.initial['fecha'] = disponibilidad.fecha
+                self.initial['cupos'] = disponibilidad.cupos
+
     def clean_fecha(self):
         fecha = self.cleaned_data.get('fecha')
-        if fecha and fecha < timezone.localdate():
+        if fecha and fecha < timezone.localdate() and fecha != self._fecha_original:
             raise forms.ValidationError('La fecha no puede ser anterior a hoy.')
         return fecha
 
@@ -65,9 +78,18 @@ class ActividadForm(forms.ModelForm):
         actividad = super().save(commit=False)
         actividad.proveedor = proveedor
         actividad.save()
+
         fecha = self.cleaned_data.get('fecha')
+        cupos = self.cleaned_data.get('cupos') or 0
+        existente = actividad.disponibilidades.first()
+
         if fecha:
-            Disponibilidad.objects.create(
-                actividad=actividad, fecha=fecha, cupos=self.cleaned_data.get('cupos') or 0
-            )
+            if existente:
+                existente.fecha = fecha
+                existente.cupos = cupos
+                existente.save()
+            else:
+                Disponibilidad.objects.create(actividad=actividad, fecha=fecha, cupos=cupos)
+        elif existente:
+            existente.delete()
         return actividad
