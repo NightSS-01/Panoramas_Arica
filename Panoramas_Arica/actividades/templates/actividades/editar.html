@@ -1,0 +1,85 @@
+{% extends 'actividades/proveedor_base.html' %}
+
+{% block titulo %}Editar actividad{% endblock %}
+
+{% block contenido %}
+  <a href="{% url 'actividades:panel' %}" class="volver-enlace">← Volver al panel</a>
+
+  <section class="form-pagina">
+    <small class="panel-etiqueta">EDITAR PUBLICACIÓN</small>
+    <h1 class="form-pagina__titulo">Editar actividad</h1>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="campo">
+        <label for="{{ form.titulo.id_for_label }}">Nombre de la actividad *</label>
+        {{ form.titulo }}
+        {% for e in form.titulo.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+      </div>
+
+      <div class="campo">
+        <label for="{{ form.descripcion.id_for_label }}">Descripción *</label>
+        {{ form.descripcion }}
+        {% for e in form.descripcion.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="{{ form.modalidad.id_for_label }}">Tipo de actividad *</label>
+          {{ form.modalidad }}
+          {% for e in form.modalidad.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="campo">
+          <label for="{{ form.fecha.id_for_label }}">Fecha</label>
+          {{ form.fecha }}
+          {% for e in form.fecha.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="campo-fila">
+        <div class="campo">
+          <label for="{{ form.cupos.id_for_label }}">Cupos disponibles</label>
+          {{ form.cupos }}
+          <small class="campo__ayuda">Fecha y cupos son obligatorios si la actividad es reservable.</small>
+          {% for e in form.cupos.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="campo">
+          <label for="{{ form.precio.id_for_label }}">Precio por persona</label>
+          {{ form.precio }}
+          <small class="campo__ayuda">Déjalo vacío si el precio se confirma después.</small>
+          {% for e in form.precio.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="{{ form.imagen.id_for_label }}">Imagen de la actividad</label>
+        {% if actividad.imagen %}
+          <img src="{{ actividad.imagen.url }}" alt="Imagen actual" class="form-pagina__imagen">
+        {% endif %}
+        <label for="{{ form.imagen.id_for_label }}" class="zona-imagenes">
+          <strong id="zona-imagenes-texto">{% if actividad.imagen %}Cambiar imagen{% else %}Seleccionar imagen{% endif %}</strong>
+          <small>JPG o PNG · máximo 2 MB · si no eliges una nueva, se conserva la actual</small>
+        </label>
+        {{ form.imagen }}
+        {% for e in form.imagen.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+      </div>
+
+      <div class="form-pagina__pie">
+        <a href="{% url 'actividades:panel' %}" class="modal-actividad__cancelar">Cancelar</a>
+        <button type="submit" class="btn-panel btn-panel--acento">Guardar cambios</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const inputImagen = document.getElementById('{{ form.imagen.id_for_label }}');
+  inputImagen.addEventListener('change', function () {
+    if (inputImagen.files.length) {
+      document.getElementById('zona-imagenes-texto').textContent = inputImagen.files[0].name;
+    }
+  });
+</script>
+{% endblock %}

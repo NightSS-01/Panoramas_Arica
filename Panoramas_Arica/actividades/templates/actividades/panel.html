@@ -86,11 +86,7 @@
 
         {% for a in actividades %}
         <article class="fila-actividad">
-          {% if a.imagen %}
-            <img src="{{ a.imagen.url }}" alt="{{ a.titulo }}" class="fila-actividad__imagen">
-          {% else %}
-            <div class="fila-actividad__imagen"></div>
-          {% endif %}
+          <img src="{{ a.imagen_url }}" alt="{{ a.titulo }}" class="fila-actividad__imagen">
           <div class="fila-actividad__info">
             <div class="fila-actividad__etiquetas">
               <span class="etiqueta-modalidad">{{ a.get_modalidad_display|upper }}</span>
@@ -117,11 +113,14 @@
                     data-precio="{{ a.precio_texto }}"
                     data-tiene-precio="{% if a.tiene_precio %}si{% else %}no{% endif %}"
                     data-reservable="{% if a.es_reservable %}si{% else %}no{% endif %}"
-                    data-imagen="{% if a.imagen %}{{ a.imagen.url }}{% endif %}">Ver en detalle</button>
-            <button type="button" class="btn-fila">Editar</button>
-            <button type="button" class="btn-fila btn-fila--gris">
-              {% if a.publicada %}Ocultar{% else %}Publicar{% endif %}
-            </button>
+                    data-imagen="{{ a.imagen_url }}">Ver en detalle</button>
+            <a href="{% url 'actividades:editar' a.pk %}" class="btn-fila">Editar</a>
+            <form method="post" action="{% url 'actividades:alternar' a.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn-fila btn-fila--gris">
+                {% if a.publicada %}Ocultar{% else %}Publicar{% endif %}
+              </button>
+            </form>
           </div>
         </article>
         {% empty %}
