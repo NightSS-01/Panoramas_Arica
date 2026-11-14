@@ -697,3 +697,24 @@ a.btn-fila {
 @media (max-width: 576px) {
   .form-pagina { padding: 1.25rem; }
 }
+
+/* Eliminar */
+.btn-fila--peligro {
+  color: #b42318;
+  border-color: #f3c7c2;
+}
+
+.btn-fila--peligro:hover {
+  background: #fdeceb;
+}
+
+.btn-panel--peligro {
+  background: #b42318;
+  border: 0;
+  color: #fff;
+}
+
+.btn-panel--peligro:hover {
+  color: #fff;
+  filter: brightness(0.92);
+}
