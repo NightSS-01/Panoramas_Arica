@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.db.models import ProtectedError
 
 from .forms import ActividadForm
 
@@ -67,4 +68,20 @@ def alternar_publicacion(request, pk):
     actividad.save(update_fields=['publicada'])
     estado = 'publicada' if actividad.publicada else 'oculta'
     messages.success(request, f'«{actividad.titulo}» ahora está {estado}.')
+    return redirect('actividades:panel')
+
+@proveedor_requerido
+@require_POST
+def eliminar_actividad(request, pk):
+    actividad = get_object_or_404(request.user.actividades, pk=pk)
+    titulo = actividad.titulo
+    try:
+        actividad.delete()
+    except ProtectedError:
+        messages.error(
+            request,
+            f'No se puede eliminar {titulo} porque tiene reservas. Puedes ocultarla.',
+        )
+    else:
+        messages.success(request, f'Actividad {titulo} eliminada.')
     return redirect('actividades:panel')
