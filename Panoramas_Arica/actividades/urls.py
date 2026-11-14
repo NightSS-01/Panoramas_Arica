@@ -6,4 +6,6 @@ app_name = 'actividades'
 urlpatterns = [
     path('', views.panel_proveedor, name='panel'),
     path('crear/', views.crear_actividad, name='crear'),
+    path('<int:pk>/editar/', views.editar_actividad, name='editar'),
+    path('<int:pk>/publicacion/', views.alternar_publicacion, name='alternar'),
 ]

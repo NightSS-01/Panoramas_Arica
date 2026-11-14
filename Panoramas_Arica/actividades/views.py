@@ -3,7 +3,7 @@ from functools import wraps
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import ActividadForm
@@ -44,3 +44,27 @@ def crear_actividad(request):
         messages.success(request, f'Actividad «{actividad.titulo}» creada.')
         return redirect('actividades:panel')
     return _render_panel(request, form, abrir_modal=True)
+
+@proveedor_requerido
+def editar_actividad(request, pk):
+    actividad = get_object_or_404(request.user.actividades, pk=pk)
+    if request.method == 'POST':
+        form = ActividadForm(request.POST, request.FILES, instance=actividad)
+        if form.is_valid():
+            form.guardar(request.user)
+            messages.success(request, 'Los cambios se guardaron.')
+            return redirect('actividades:panel')
+    else:
+        form = ActividadForm(instance=actividad)
+    return render(request, 'actividades/editar.html', {'form': form, 'actividad': actividad})
+
+
+@proveedor_requerido
+@require_POST
+def alternar_publicacion(request, pk):
+    actividad = get_object_or_404(request.user.actividades, pk=pk)
+    actividad.publicada = not actividad.publicada
+    actividad.save(update_fields=['publicada'])
+    estado = 'publicada' if actividad.publicada else 'oculta'
+    messages.success(request, f'«{actividad.titulo}» ahora está {estado}.')
+    return redirect('actividades:panel')
