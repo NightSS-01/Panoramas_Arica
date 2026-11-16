@@ -5,7 +5,7 @@ from .forms_cuentas import RegistroForm, LoginForm
 
 DESTINOS = {
     'usuario': 'inicio',
-    'proveedor': 'inicio',
+    'proveedor': 'actividades:panel',
     'administrador': 'index',
 }
 
