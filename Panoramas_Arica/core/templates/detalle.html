@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}{{ actividad.titulo }} | Panoramas Arica{% endblock %}
+
+{% block contenido %}
+{% with d=actividad.primera_disponibilidad %}
+<a href="{% url 'inicio' %}" class="detalle__volver">← Volver a los panoramas</a>
+
+<header class="detalle__cabecera">
+  <div>
+    <span class="tarjeta__badge detalle__badge {% if actividad.modalidad != 'reservable' %}tarjeta__badge--claro{% endif %}">{{ actividad.get_modalidad_display }}</span>
+    <h1 class="detalle__titulo">{{ actividad.titulo }}</h1>
+    {% if actividad.ubicacion %}
+      <p class="detalle__lugar"><i class="bi bi-geo-alt"></i> {{ actividad.ubicacion }}</p>
+    {% endif %}
+  </div>
+  <div class="detalle__precio-caja">
+    <span class="detalle__precio">{{ actividad.precio_texto }}</span>
+    {% if actividad.precio %}<span class="detalle__moneda">CLP</span>{% endif %}
+  </div>
+</header>
+
+<section class="galeria">
+  <div class="galeria__principal" style="background-image: url('{{ actividad.imagen_url }}'); grid-column: 1 / -1; min-height: 420px;"></div>
+</section>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <p class="detalle__etiqueta">Sobre la experiencia</p>
+    <p class="detalle__texto">{{ actividad.descripcion|linebreaksbr }}</p>
+  </div>
+
+  <aside class="col-lg-4">
+    <div class="panel">
+      <p class="panel__titulo">Detalles de la actividad</p>
+      <ul class="panel__lista">
+        {% if d %}
+        <li>
+          <span class="panel__icono"><i class="bi bi-calendar3"></i></span>
+          <div><small>Fecha</small><strong>{{ d.fecha|date:"j \d\e F \d\e Y" }}</strong></div>
+        </li>
+        {% endif %}
+        {% if actividad.ubicacion %}
+        <li>
+          <span class="panel__icono"><i class="bi bi-geo-alt"></i></span>
+          <div><small>Lugar</small><strong>{{ actividad.ubicacion }}</strong></div>
+        </li>
+        {% endif %}
+        {% if d and actividad.modalidad != 'difusion' %}
+        <li>
+          <span class="panel__icono"><i class="bi bi-people"></i></span>
+          <div><small>Disponibilidad</small><strong>{{ d.cupos }} cupos disponibles</strong></div>
+        </li>
+        {% endif %}
+      </ul>
+
+      <div class="panel__total">
+        <small>Total por persona</small>
+        <strong>{{ actividad.precio_texto }}</strong>
+        {% if actividad.precio %}<span class="detalle__moneda">CLP</span>{% endif %}
+      </div>
+
+      {% if actividad.es_reservable %}
+        <a href="#" class="panel__boton">Reservar ahora →</a>
+        <p class="panel__nota">Completa los datos de los asistentes para continuar.</p>
+      {% else %}
+        <p class="panel__nota">Esta actividad no está disponible para reservar.</p>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+{% endwith %}
+{% endblock %}

@@ -141,6 +141,132 @@ body {
   font-size: 0.85rem;
 }
 
+/* Estilo Login*/
+
+.auth-card {
+  background: #fff;
+  border: 1px solid var(--color-borde);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  max-width: 1150px;
+  margin-inline: auto;
+}
+
+.auth-imagen {
+  flex-direction: column;
+  min-height: 600px;
+  padding: 2.5rem;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(20, 16, 12, 0) 35%, rgba(20, 16, 12, 0.85)),
+    url('../images/hero.jpg') center / cover;
+}
+
+.auth-kicker-claro {
+  color: #f6b26b;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+}
+
+.auth-titulo-claro {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.auth-beneficios li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.auth-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-acento);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.auth-formulario {
+  padding: 2rem 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .auth-formulario {
+    padding: 2.5rem 3rem;
+  }
+}
+
+.auth-volver {
+  display: inline-block;
+  margin-bottom: 2rem;
+  color: #6b665f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-kicker {
+  color: var(--color-acento);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+}
+
+.auth-titulo {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.auth-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.auth-formulario .form-control {
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+}
+
+.auth-separador {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0;
+  color: #8a847c;
+  font-size: 0.8rem;
+}
+
+.auth-separador::before,
+.auth-separador::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-borde);
+}
+
+.auth-aviso {
+  background: #f7f6f3;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  color: #6b665f;
+}
+
+.auth-enlace {
+  color: var(--color-acento);
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /*Hero + buscador*/
 
 .hero {
