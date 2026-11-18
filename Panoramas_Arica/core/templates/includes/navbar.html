@@ -46,8 +46,9 @@
           </form>
         </li>
       {% else %}
-        <li class="nav-item"><a class="btn btn-pill btn-outline-pill" href="#">Iniciar sesión</a></li>
-        <li class="nav-item"><a class="btn btn-pill btn-accent" href="#">Crear cuenta</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'cuentas:login_proveedores' %}">Soy proveedor</a></li>
+        <li class="nav-item"><a class="btn btn-pill btn-outline-pill" href="{% url 'cuentas:login' %}">Iniciar sesión</a></li>
+        <li class="nav-item"><a class="btn btn-pill btn-accent" href="{% url 'cuentas:registro' %}">Crear cuenta</a></li>
       {% endif %}
       </ul>
     </div>

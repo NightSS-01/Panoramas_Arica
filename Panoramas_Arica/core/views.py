@@ -1,21 +1,34 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
 
-from .datos import ACTIVIDADES, filtrar_actividades
+from actividades.models import Actividad
 
 
 def inicio(request):
-    actividades = filtrar_actividades(
-        ACTIVIDADES,
-        request.GET.get("q", ""),
-        request.GET.get("modalidad", ""),
-        request.GET.get("participantes", ""),
-    )
+    q = request.GET.get("q", "").strip()
+    modalidad = request.GET.get("modalidad", "")
+    participantes = request.GET.get("participantes", "")
+
+    actividades = Actividad.objects.filter(publicada=True).prefetch_related("disponibilidades")
+
+    if q:
+        actividades = actividades.filter(
+            Q(titulo__icontains=q)
+            | Q(descripcion__icontains=q)
+            | Q(ubicacion__icontains=q)
+        )
+
+    if modalidad:
+        actividades = actividades.filter(modalidad=modalidad)
+
+    if participantes.isdigit():
+        actividades = actividades.filter(
+            disponibilidades__cupos__gte=int(participantes)
+        ).distinct()
+
     return render(request, "inicio.html", {"actividades": actividades})
 
 
 def detalle(request, id):
-    for actividad in ACTIVIDADES:
-        if actividad["id"] == id:
-            return render(request, "detalle.html", {"actividad": actividad})
-    raise Http404("Actividad no encontrada")
+    actividad = get_object_or_404(Actividad, pk=id, publicada=True)
+    return render(request, "detalle.html", {"actividad": actividad})
