@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/login_proveedores.css' %}" />
+{% endblock %}
+{% block titulo %}Acceso proveedores · Panoramas Arica{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block contenido %}
+<div class="prov-login">
+  <div class="prov-card">
+    <p class="prov-kicker">PANEL DE PROVEEDORES</p>
+    <h1 class="prov-titulo">Accede a tu panel</h1>
+    <p class="prov-bajada">Ingresa con el correo y la contraseña que te entregó la administración.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger py-2">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+
+      <div class="mb-3">
+        <label for="{{ form.email.id_for_label }}" class="form-label prov-label">Correo</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+          <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        <label for="{{ form.password.id_for_label }}" class="form-label prov-label">Contraseña</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}
+          <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="prov-boton w-100">Ingresar</button>
+    </form>
+
+    <p class="text-center small mt-4 mb-0">
+      ¿No eres proveedor? <a href="{% url 'cuentas:login' %}" class="prov-enlace">Entra aquí</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

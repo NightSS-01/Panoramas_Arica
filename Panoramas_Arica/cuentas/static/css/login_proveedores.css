@@ -1,0 +1,79 @@
+/* ===== Login de proveedores ===== */
+
+/* Fondo gris de toda la página, solo cuando existe este login */
+body:has(.prov-login) {
+  background-color: #e9ebee;
+}
+
+.prov-login {
+   width: 100%;
+  --prov-naranja: #f26b1d;       /* reemplázalo por el naranja de tu plataforma */
+  --prov-naranja-osc: #d95a10;   /* una versión un poco más oscura, para hover */
+  max-width: 440px;
+  margin: 2rem auto;
+}
+
+.prov-card {
+  background: #fff;
+  border-radius: 1rem;
+  border-top: 6px solid var(--prov-naranja);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2.25rem 2rem;
+}
+
+.prov-kicker {
+  color: var(--prov-naranja);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.prov-titulo {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.prov-bajada {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.prov-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.prov-login .form-control:focus {
+  border-color: var(--prov-naranja);
+  box-shadow: 0 0 0 0.2rem rgba(242, 107, 29, 0.2);
+}
+
+.prov-boton {
+  background: var(--prov-naranja);
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1rem;
+  transition: background 0.2s;
+}
+
+.prov-boton:hover {
+  background: var(--prov-naranja-osc);
+}
+
+.prov-enlace {
+  color: var(--prov-naranja-osc);
+  font-weight: 600;
+}
+body:has(.prov-login) main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prov-login {
+  width: 100%;
+}

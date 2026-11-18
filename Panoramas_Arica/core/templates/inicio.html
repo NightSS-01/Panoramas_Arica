@@ -1,16 +1,16 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block titulo %}Panoramas Arica{% endblock %}
 
-{% block contenido %}
+{% block hero %}
 <section class="hero">
   <div class="hero__contenido">
     <p class="hero__etiqueta">Vive el extremo norte</p>
     <h1 class="hero__titulo">La aventura empieza <span class="hero__acento">aquí.</span></h1>
     <p class="hero__texto">
       Experiencias auténticas entre desierto y mar. Encuentra panoramas únicos
-      y reserva tu próxima historia en Arica.
+      y reserva tu próxima historia en Arica y Parinacota
     </p>
   </div>
 
@@ -44,6 +44,9 @@
     <button type="submit" class="buscador__boton">Buscar →</button>
   </form>
 </section>
+{% endblock %}
+
+{% block contenido %}
 <section class="panoramas">
   <div class="panoramas__encabezado">
     <div>
@@ -51,16 +54,17 @@
       <h2 class="panoramas__titulo">Panoramas Destacados</h2>
       <p class="panoramas__subtitulo">Ideas para salir de la rutina y descubrir otra cara de Arica.</p>
     </div>
-        <p class="panoramas__contador">{{ actividades|length }} actividades encontradas</p>
+    <p class="panoramas__contador">{{ actividades|length }} actividades encontradas</p>
   </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for actividad in actividades %}
       <div class="col">
         {% include 'includes/tarjeta_actividad.html' with a=actividad %}
       </div>
+    {% empty %}
+      <p>No encontramos actividades con esos filtros.</p>
     {% endfor %}
-  </div>
   </div>
 </section>
 {% endblock %}
