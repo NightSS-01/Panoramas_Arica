@@ -109,4 +109,59 @@ class LoginProveedorForm(LoginForm):
 class LoginAdministradorForm(LoginForm):
     roles_permitidos = ('administrador')
 
+class CrearProveedorForm(EmailUnicoMixin, OrganizacionUnicaMixin, forms.Form):
+    organizacion = forms.CharField(label='Organización', max_length=150)
+    nombre = forms.CharField(label='Nombre del responsable', max_length=150)
+    apellido = forms.CharField(label='Apellido del responsable', max_length=150)
+    email = forms.EmailField(label='Correo')
+    telefono = forms.CharField(label='Teléfono', max_length=20, required=False)
+    password = forms.CharField(label='Contraseña inicial', widget=forms.PasswordInput)
+    # aplica las reglas de contraseña de django
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        validate_password(password)
+        return password
+
+    def save(self, creado_por):
+        datos = self.cleaned_data
+        with transaction.atomic():
+            usuario = Usuario(
+                username=datos['email'], email=datos['email'],
+                first_name=datos['nombre'], last_name=datos['apellido'],
+                rol=Rol.objects.get(codigo='proveedor'),
+            )
+            usuario.set_password(datos['password'])
+            usuario.save()
+            return Proveedor.objects.create(
+                usuario=usuario, organizacion=datos['organizacion'],
+                telefono=datos['telefono'], creado_por=creado_por,
+            )
+
+
+class EditarProveedorForm(forms.Form):
+    organizacion = forms.CharField(label='Organización', max_length=150)
+    nombre = forms.CharField(label='Nombre del responsable', max_length=150)
+    apellido = forms.CharField(label='Apellido del responsable', max_length=150)
+    telefono = forms.CharField(label='Teléfono', max_length=20, required=False)
+
+    def __init__(self, *args, proveedor, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.proveedor = proveedor
+        self.initial = {
+            'organizacion': proveedor.organizacion,
+            'nombre': proveedor.usuario.first_name,
+            'apellido': proveedor.usuario.last_name,
+            'telefono': proveedor.telefono,
+        }
+
+    def save(self):
+        datos = self.cleaned_data
+        usuario = self.proveedor.usuario
+        with transaction.atomic():
+            usuario.first_name = datos['nombre']
+            usuario.last_name = datos['apellido']
+            usuario.save()
+            self.proveedor.organizacion = datos['organizacion']
+            self.proveedor.telefono = datos['telefono']
+            self.proveedor.save()
 
