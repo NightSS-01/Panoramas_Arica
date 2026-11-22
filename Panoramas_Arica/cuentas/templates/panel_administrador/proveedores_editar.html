@@ -1,0 +1,38 @@
+{% extends "panel_administrador/base.html" %}
+{% load crispy_forms_tags %}
+{% block titulo %}Editar proveedor{% endblock %}
+{% block contenido %}
+<div class="panel-cabecera">
+  <div>
+    <h2>{{ proveedor.organizacion }}</h2>
+    <p>{{ proveedor.usuario.email }}</p>
+  </div>
+</div>
+
+<div class="panel-tarjeta p-4" style="max-width: 640px;">
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="d-flex gap-2 mt-3">
+      <button type="submit" class="btn-naranja">Guardar cambios</button>
+      <a href="{% url 'cuentas:panel_proveedores' %}" class="btn-linea">Cancelar</a>
+    </div>
+  </form>
+  <p class="texto-suave pt-4">
+   <h5>Estado de la cuenta</h5>
+    {% if proveedor.usuario.is_active %}
+      La cuenta está activa. Si la desactivas, el proveedor no podrá iniciar sesión, pero se conservan sus actividades y reservas.
+    {% else %}
+      La cuenta está desactivada y el proveedor no puede iniciar sesión.
+    {% endif %}
+  </p>
+  <form method="post" action="{% url 'cuentas:panel_proveedor_estado' proveedor.pk %}">
+    {% csrf_token %}
+    {% if proveedor.usuario.is_active %}
+      <button type="submit" class="btn-linea" onclick="return confirm('¿Desactivar esta cuenta?')">Desactivar cuenta</button>
+    {% else %}
+      <button type="submit" class="btn-naranja">Reactivar cuenta</button>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}
