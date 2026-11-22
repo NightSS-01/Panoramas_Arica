@@ -1,0 +1,8 @@
+{% extends "panel_administrador/base.html" %}
+
+{% block titulo %}Resumen{% endblock %}
+
+{% block contenido %}
+  <p class="panel-etiqueta">VISTA GENERAL</p>
+  <h2>Hola, {{ user.first_name|default:user.email }}</h2>
+{% endblock %}
