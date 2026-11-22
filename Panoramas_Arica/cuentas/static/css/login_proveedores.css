@@ -73,7 +73,3 @@ body:has(.prov-login) main {
   align-items: center;
   justify-content: center;
 }
-
-.prov-login {
-  width: 100%;
-}
