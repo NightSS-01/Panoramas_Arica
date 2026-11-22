@@ -37,6 +37,12 @@
         </div>
       </div>
 
+      <div class="campo">
+        <label for="{{ form.categoria.id_for_label }}">Categoría</label>
+        {{ form.categoria }}
+        {% for e in form.categoria.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+      </div>
+      
       <div class="campo-fila">
         <div class="campo">
           <label for="{{ form.cupos.id_for_label }}">Cupos disponibles</label>
