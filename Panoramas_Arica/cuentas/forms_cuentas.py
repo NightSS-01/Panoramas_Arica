@@ -1,10 +1,32 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from .models import Usuario
+from .models import Usuario, Rol, Proveedor
+from django.db import transaction
+
+# funcion para reutilizar de clean_email
+# hace que no se repita el correo
+class EmailUnicoMixin:
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        if Usuario.objects.filter(email__iexact=email).exists():
+            raise ValidationError('Ya existe una cuenta con ese correo.')
+        return email
 
 
-class RegistroForm(forms.Form):
+class OrganizacionUnicaMixin:
+    def clean_organizacion(self):
+        organizacion = self.cleaned_data['organizacion'].strip()
+        repetida = Proveedor.objects.filter(organizacion__iexact=organizacion)
+        proveedor = getattr(self, 'proveedor', None)
+        if proveedor is not None:
+            repetida = repetida.exclude(pk=proveedor.pk)
+        if repetida.exists():
+            raise ValidationError('Ya existe un proveedor con esa organización.')
+        return organizacion
+
+
+class RegistroForm(EmailUnicoMixin, forms.Form):
     nombre = forms.CharField(
         label='Nombre',
         max_length=150,
@@ -22,12 +44,6 @@ class RegistroForm(forms.Form):
         label='Confirmar contraseña',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'autocomplete': 'new-password'}),
     )
-
-    def clean_email(self):
-        email = self.cleaned_data['email'].strip().lower()
-        if Usuario.objects.filter(email__iexact=email).exists():
-            raise ValidationError('Ya existe una cuenta con ese correo.')
-        return email
 
     def clean(self):
         datos = super().clean()
@@ -76,7 +92,7 @@ class LoginForm(forms.Form):
             if usuario is None:
                 Usuario().set_password(password)
                 raise ValidationError(self.MENSAJE)
-            if (not usuario.check_password(password) or not usuario.is_active or usuario.rol not in self.roles_permitidos):
+            if (not usuario.check_password(password) or not usuario.is_active or usuario.rol.codigo not in self.roles_permitidos):
                 raise ValidationError(self.MENSAJE)
             self.usuario = usuario
         return datos
@@ -87,3 +103,10 @@ class LoginForm(forms.Form):
 #hereda todo  de login form
 class LoginProveedorForm(LoginForm):
     roles_permitidos = ('proveedor',)
+
+
+#Hera todo de login form
+class LoginAdministradorForm(LoginForm):
+    roles_permitidos = ('administrador')
+
+
