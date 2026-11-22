@@ -718,3 +718,18 @@ a.btn-fila {
   color: #fff;
   filter: brightness(0.92);
 }
+
+.proveedor-header__logo {
+  display: block;
+  line-height: 0;
+}
+
+.proveedor-header__logo img {
+  display: block;
+  height: 100px;
+  width: auto;
+}
+
+@media (max-width: 576px) {
+  .proveedor-header__logo img { height: 36px; }
+}
