@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Redirigiendo a Webpay | Panoramas Arica{% endblock %}
+
+{% block contenido %}
+<div class="text-center py-5">
+  <p class="lead">Redirigiendo a Webpay…</p>
+  <form id="webpay" action="{{ url }}" method="post">
+    <input type="hidden" name="token_ws" value="{{ token }}">
+    <noscript><button type="submit" class="btn btn-pill btn-accent">Ir a pagar</button></noscript>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>document.getElementById('webpay').submit();</script>
+{% endblock %}
