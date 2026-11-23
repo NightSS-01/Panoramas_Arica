@@ -9,7 +9,11 @@ from .forms import ActividadForm
 proveedor_requerido = rol_requerido('proveedor', login='cuentas:login_proveedores')
 
 def _render_panel(request, form, abrir_modal=False):
-    actividades = request.user.actividades.prefetch_related('disponibilidades')
+    actividades = (
+        request.user.actividades
+        .select_related('categoria')
+        .prefetch_related('disponibilidades')
+    )
     contexto = {
         'actividades': actividades,
         'total_publicadas': sum(1 for a in actividades if a.publicada),
@@ -32,7 +36,7 @@ def crear_actividad(request):
         actividad = form.guardar(request.user)
         messages.success(request, f'Actividad «{actividad.titulo}» creada.')
         return redirect('actividades:panel')
-    return _render_panel(request, form, abrir_modal=True)
+    return _render_panel(request, form=form, abrir_modal=True)
 
 @proveedor_requerido
 def editar_actividad(request, pk):

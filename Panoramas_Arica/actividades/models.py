@@ -3,6 +3,16 @@ from django.db import models
 from django.templatetags.static import static
 
 
+class Categoria(models.Model):
+    nombre = models.CharField(max_length=60, unique=True)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name_plural = 'categorías'
+
+    def __str__(self):
+        return self.nombre
+
 class Actividad(models.Model):
     class Modalidad(models.TextChoices):
         RESERVABLE = 'reservable', 'Reservable'
@@ -19,6 +29,13 @@ class Actividad(models.Model):
     descripcion = models.TextField()
     modalidad = models.CharField(
         max_length=40, choices=Modalidad.choices, default=Modalidad.RESERVABLE
+    )
+    categoria = models.ForeignKey(
+        Categoria,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='actividades',
     )
     ubicacion = models.CharField(max_length=150, blank=True)
     imagen = models.ImageField(upload_to='actividades/', blank=True)

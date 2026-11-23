@@ -17,7 +17,7 @@ class ActividadForm(forms.ModelForm):
 
     class Meta:
         model = Actividad
-        fields = ['titulo', 'descripcion', 'modalidad', 'precio', 'imagen']
+        fields = ['titulo', 'descripcion', 'categoria', 'modalidad', 'precio', 'imagen']
         widgets = {
             'titulo': forms.TextInput(attrs={'placeholder': 'Ej. Ruta fotográfica por el humedal'}),
             'descripcion': forms.Textarea(attrs={
@@ -33,6 +33,7 @@ class ActividadForm(forms.ModelForm):
         for nombre, campo in self.fields.items():
             if nombre != 'imagen':
                 campo.widget.attrs['class'] = 'campo__control'
+        self.fields['categoria'].empty_label = 'Sin categoría'
         self.fields['imagen'].widget.attrs.update(
             {'hidden': True, 'accept': 'image/jpeg,image/png'}
         )

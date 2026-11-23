@@ -95,6 +95,7 @@
               {% else %}
                 <span class="estado estado--oculta">Oculta</span>
               {% endif %}
+              {% if a.categoria %}<span class="etiqueta-categoria">{{ a.categoria.nombre }}</span>{% endif %}
             </div>
             <h3 class="fila-actividad__titulo">{{ a.titulo }}</h3>
             <p class="fila-actividad__datos">
@@ -226,6 +227,12 @@
               {% for e in form.descripcion.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
             </div>
 
+            <div class="campo">
+              <label for="{{ form.categoria.id_for_label }}">Categoría</label>
+              {{ form.categoria }}
+              {% for e in form.categoria.errors %}<div class="campo__error">{{ e }}</div>{% endfor %}
+            </div>
+            
             <div class="campo-fila">
               <div class="campo">
                 <label for="{{ form.modalidad.id_for_label }}">Tipo de actividad *</label>

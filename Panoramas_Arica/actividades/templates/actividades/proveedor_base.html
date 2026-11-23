@@ -11,13 +11,11 @@
 </head>
 <body class="proveedor-body">
   <header class="proveedor-header">
-    <div class="proveedor-header__marca">
-      <span class="proveedor-logo">P</span>
-      <div>
-        <small class="proveedor-header__etiqueta">PORTAL PROVEEDOR</small>
-        <div class="proveedor-header__nombre">Panoramas Arica</div>
-      </div>
-    </div>
+    <a href="{% url 'actividades:panel' %}" class="proveedor-header__logo" aria-label="Ir al panel">
+      <img src="{% static 'actividades/img/logo-panel.png' %}" alt="Panoramas Arica">
+    </a>
+
+    {% firstof request.user.first_name request.user.email as nombre_cuenta %}
     <div class="proveedor-header__cuenta">
       <div class="text-end">
         <div class="proveedor-header__org">{{ request.user.first_name|default:request.user.email }}</div>
