@@ -1,0 +1,32 @@
+{% extends "panel_administrador/base.html" %}
+{% block titulo %}Consultas{% endblock %}
+{% block contenido %}
+<div class="panel-cabecera">
+  <div>
+    <h2>Consultas</h2>
+    <p>Recibe, revisa y responde solicitudes de soporte.</p>
+  </div>
+</div>
+
+<div class="panel-tarjeta">
+  {% for c in consultas %}
+  <a href="{% url 'cuentas:panel_consulta_detalle' c.pk %}" class="fila-consulta">
+    <span class="codigo-consulta">{{ c.codigo }}</span>
+    <div class="cuerpo">
+      <strong>{{ c.get_asunto_display }}</strong>
+      <div class="texto-suave">
+        {{ c.autor.rol.nombre }} · {{ c.autor.get_full_name|default:c.autor.email }} · {{ c.mensaje|truncatechars:90 }}
+      </div>
+    </div>
+    <span class="texto-suave">{{ c.creada_en|date:"d M, H:i" }}</span>
+    {% if c.pendiente %}
+      <span class="chip chip-pendiente">Pendiente</span>
+    {% else %}
+      <span class="chip chip-activo">Respondida</span>
+    {% endif %}
+  </a>
+  {% empty %}
+  <p class="texto-suave p-4 mb-0">Aún no hay consultas.</p>
+  {% endfor %}
+</div>
+{% endblock %}
