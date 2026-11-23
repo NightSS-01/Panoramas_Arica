@@ -293,37 +293,34 @@
           <button type="button" class="modal-actividad__cerrar"
                   data-bs-dismiss="modal" aria-label="Cerrar">&times;</button>
         </div>
+        <form id="form-soporte" method="post" action="{% url 'cuentas:consulta_enviar' %}" class="modal-actividad__form">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
 
-        <form id="form-soporte" class="modal-actividad__form">
           <div class="modal-body modal-actividad__cuerpo">
+            <p class="campo__ayuda">Enviarás esta solicitud como {{ request.user.email }}.</p>
+
             <div class="campo">
               <label for="sop-tipo">Tipo de problema *</label>
-              <select id="sop-tipo" class="campo__control">
+              <select id="sop-tipo" name="asunto" class="campo__control" required>
                 <option value="" selected disabled>Selecciona una categoría</option>
-                <option>Problema con una publicación</option>
-                <option>Reservas o asistentes</option>
-                <option>Pagos y transferencias</option>
-                <option>Acceso a mi cuenta</option>
-                <option>Otro problema</option>
+                <option value="publicacion">Problema con una publicación</option>
+                <option value="reservas">Reservas o asistentes</option>
+                <option value="pagos">Pagos y transferencias</option>
+                <option value="cuenta">Acceso a mi cuenta</option>
+                <option value="otro">Otro problema</option>
               </select>
             </div>
 
             <div class="campo">
               <label for="sop-descripcion">Descripción del problema *</label>
-              <textarea id="sop-descripcion" rows="5" class="campo__control"
+              <textarea id="sop-descripcion" name="mensaje" rows="5" class="campo__control" required
                         placeholder="Cuéntanos qué ocurrió e incluye todos los detalles que puedan ayudarnos…"></textarea>
             </div>
-
-            <div class="campo">
-              <label for="sop-correo">Correo de contacto *</label>
-              <input type="email" id="sop-correo" class="campo__control"
-                     value="contacto@nortevivo.cl">
-            </div>
           </div>
-
           <div class="modal-footer modal-actividad__pie">
             <button type="button" class="modal-actividad__cancelar" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn-panel btn-panel--acento">Enviar solicitud</button>
+            <button type="submit" class="btn-panel btn-panel--acento">Enviar solicitud</button>
           </div>
         </form>
       </div>

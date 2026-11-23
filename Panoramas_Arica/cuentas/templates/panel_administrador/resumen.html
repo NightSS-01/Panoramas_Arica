@@ -1,8 +1,66 @@
 {% extends "panel_administrador/base.html" %}
-
 {% block titulo %}Resumen{% endblock %}
-
 {% block contenido %}
-  <p class="panel-etiqueta">VISTA GENERAL</p>
-  <h2>Hola, {{ user.first_name|default:user.email }}</h2>
+<div class="panel-cabecera">
+  <div>
+    <small class="panel-etiqueta">VISTA GENERAL</small>
+    <h2>{{ saludo }}, {{ user.first_name|default:user.email }}</h2>
+    <p>Revisa el estado operativo de Panoramas Arica.</p>
+  </div>
+  <a href="{% url 'cuentas:panel_proveedores' %}" class="btn-naranja"> Crear proveedor</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="tarjeta-dato">
+      <span>Proveedores</span>
+      <strong>{{ total_proveedores }}</strong>
+      <small>{{ proveedores_activos }} activos</small>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="tarjeta-dato">
+      <span>Actividades</span>
+      <strong>{{ total_actividades }}</strong>
+      <small>{{ actividades_publicadas }} publicadas</small>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="tarjeta-dato">
+      <span>Reservas</span>
+      <strong>—</strong>
+      <small>Disponible con el módulo de reservas</small>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="tarjeta-dato">
+      <span>Consultas pendientes</span>
+      <strong>{{ total_pendientes }}</strong>
+      <small>Requieren respuesta</small>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="panel-tarjeta p-4">
+      <h5>Últimas reservas</h5>
+      <p class="texto-suave mb-0">Se mostrarán aquí cuando el módulo de reservas esté listo.</p>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="tarjeta-oscura">
+      <small class="panel-etiqueta">ATENCIÓN REQUERIDA</small>
+      <h4>{{ total_pendientes }} consulta{{ total_pendientes|pluralize }} pendiente{{ total_pendientes|pluralize }}</h4>
+      {% for c in pendientes_recientes %}
+        <a href="{% url 'cuentas:panel_consulta_detalle' c.pk %}" class="item-atencion">
+          <strong>{{ c.get_asunto_display }}</strong>
+          <small>{{ c.autor.get_full_name|default:c.autor.email }} · {{ c.creada_en|date:"d M, H:i" }}</small>
+        </a>
+      {% empty %}
+        <p class="mb-0">No hay consultas pendientes.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}

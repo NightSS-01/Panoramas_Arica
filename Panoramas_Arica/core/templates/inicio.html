@@ -60,7 +60,7 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     {% for actividad in actividades %}
       <div class="col">
-        {% include 'includes/tarjeta_actividad.html' with a=actividad %}
+        {% include 'components/tarjeta_actividad.html' with a=actividad %}
       </div>
     {% empty %}
       <p>No encontramos actividades con esos filtros.</p>

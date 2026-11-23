@@ -1,0 +1,36 @@
+{% extends "panel_administrador/base.html" %}
+{% load crispy_forms_tags %}
+{% block titulo %}Consulta {{ consulta.codigo }}{% endblock %}
+{% block contenido %}
+<div class="panel-cabecera">
+  <div>
+    <h2>{{ consulta.get_asunto_display }}</h2>
+    <p>{{ consulta.codigo }} · {{ consulta.creada_en|date:"d/m/Y H:i" }}</p>
+  </div>
+  <a href="{% url 'cuentas:panel_consultas' %}" class="btn-linea">Volver</a>
+</div>
+
+<div class="panel-tarjeta p-4 mb-4" style="max-width: 760px;">
+  <div class="texto-suave mb-2">
+    De {{ consulta.autor.get_full_name|default:consulta.autor.email }} ({{ consulta.autor.rol.nombre }}) · {{ consulta.autor.email }}
+  </div>
+  <p class="mb-0">{{ consulta.mensaje|linebreaksbr }}</p>
+</div>
+
+<div class="panel-tarjeta p-4" style="max-width: 760px;">
+  {% if form %}
+    <h5>Responder</h5>
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button type="submit" class="btn-naranja mt-2">Guardar respuesta</button>
+    </form>
+  {% else %}
+    <h5>Respuesta</h5>
+    <div class="texto-suave mb-2">
+      Por {{ consulta.respondida_por.get_full_name|default:consulta.respondida_por.email }} · {{ consulta.respondida_en|date:"d/m/Y H:i" }}
+    </div>
+    <p class="mb-0">{{ consulta.respuesta|linebreaksbr }}</p>
+  {% endif %}
+</div>
+{% endblock %}

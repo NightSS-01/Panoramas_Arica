@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from .models import Usuario, Rol, Proveedor
+from .models import Usuario, Rol, Proveedor, Consulta
 from django.db import transaction
 
 # funcion para reutilizar de clean_email
@@ -165,3 +165,15 @@ class EditarProveedorForm(forms.Form):
             self.proveedor.telefono = datos['telefono']
             self.proveedor.save()
 
+class ConsultaForm(forms.ModelForm):
+    class Meta:
+        model = Consulta
+        fields = ['asunto', 'mensaje']
+
+
+class ResponderConsultaForm(forms.ModelForm):
+    respuesta = forms.CharField(label='Respuesta', widget=forms.Textarea(attrs={'rows': 5}))
+
+    class Meta:
+        model = Consulta
+        fields = ['respuesta']

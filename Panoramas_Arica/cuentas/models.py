@@ -61,3 +61,44 @@ class Administrador(models.Model):
 
     def __str__(self):
         return f'{self.usuario.email} · {self.cargo}'
+
+
+class Consulta(models.Model):
+    class Asunto(models.TextChoices):
+        ACTIVIDAD = 'actividad', 'Consulta sobre una actividad'
+        PUBLICACION = 'publicacion', 'Problema con una publicación'
+        RESERVAS = 'reservas', 'Reservas o asistentes'
+        PAGOS = 'pagos', 'Pagos y transferencias'
+        CUENTA = 'cuenta', 'Problema con mi cuenta'
+        OTRO = 'otro', 'Otro'
+
+    autor = models.ForeignKey(
+        Usuario, on_delete=models.PROTECT, related_name='consultas',
+    )
+    proveedor = models.ForeignKey(
+        Proveedor, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='consultas',
+    )
+    asunto = models.CharField(max_length=20, choices=Asunto.choices)
+    mensaje = models.TextField()
+    creada_en = models.DateTimeField(auto_now_add=True)
+    respuesta = models.TextField(blank=True)
+    respondida_en = models.DateTimeField(null=True, blank=True)
+    respondida_por = models.ForeignKey(
+        Usuario, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='consultas_respondidas',
+    )
+
+    class Meta:
+        ordering = ['-creada_en']
+
+    def __str__(self):
+        return f'{self.codigo} · {self.get_asunto_display()}'
+
+    @property
+    def codigo(self):
+        return f'CP-{self.pk:03d}'
+
+    @property
+    def pendiente(self):
+        return self.respondida_en is None

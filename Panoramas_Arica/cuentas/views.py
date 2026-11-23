@@ -1,4 +1,7 @@
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils import timezone 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
@@ -6,8 +9,9 @@ from django.views.decorators.http import require_POST
 # Los argumentos normales en .filter() siempre se combinan con un AND. Con Q puedes escribir condiciones más flexibles
 from django.db.models import Q
 from .decorador import rol_requerido
-from .forms_cuentas import RegistroForm, LoginForm, CrearProveedorForm, EditarProveedorForm
-from .models import Proveedor
+from .forms_cuentas import RegistroForm, LoginForm, CrearProveedorForm, EditarProveedorForm, ConsultaForm, ResponderConsultaForm
+from .models import Proveedor, Consulta
+from actividades.models import Actividad
 DESTINOS = {
     'usuario': 'inicio',
     'proveedor': 'actividades:panel',
@@ -47,7 +51,19 @@ def cerrar_sesion(request):
 
 @rol_requerido('administrador', login='cuentas:login_administradores')
 def panel_admin(request):
-    return render(request, 'panel_administrador/resumen.html')
+    hora = timezone.localtime().hour
+    saludo = 'Buenos días' if hora < 12 else 'Buenas tardes' if hora < 20 else 'Buenas noches'
+    pendientes = Consulta.objects.filter(respondida_en__isnull=True)
+    contexto = {
+        'saludo': saludo,
+        'total_proveedores': Proveedor.objects.count(),
+        'proveedores_activos': Proveedor.objects.filter(usuario__is_active=True).count(),
+        'total_actividades': Actividad.objects.count(),
+        'actividades_publicadas': Actividad.objects.filter(publicada=True).count(),
+        'total_pendientes': pendientes.count(),
+        'pendientes_recientes': pendientes.select_related('autor')[:3],
+    }
+    return render(request, 'panel_administrador/resumen.html', contexto)
 
 @rol_requerido('administrador', login='cuentas:login_administradores')
 def panel_proveedores(request):
@@ -98,3 +114,41 @@ def panel_proveedor_detalle(request, pk):
     actividades = proveedor.usuario.actividades.prefetch_related('disponibilidades')
     return render(request, 'panel_administrador/proveedores_detalles.html',
                   {'proveedor': proveedor, 'actividades': actividades})
+
+@login_required
+@require_POST
+def consulta_enviar(request):
+    form = ConsultaForm(request.POST)
+    if form.is_valid():
+        consulta = form.save(commit=False)
+        consulta.autor = request.user
+        consulta.save()
+        messages.success(request, 'Consulta enviada. Te responderemos a la brevedad.')
+    else:
+        messages.error(request, 'No pudimos enviar tu consulta. Revisa el asunto y el mensaje.')
+    destino = request.POST.get('next', '')
+    if not url_has_allowed_host_and_scheme(destino, allowed_hosts={request.get_host()}):
+        destino = DESTINOS.get(request.user.rol.codigo, 'inicio')
+    return redirect(destino)
+
+@rol_requerido('administrador', login='cuentas:login_administradores')
+def panel_consultas(request):
+    consultas = Consulta.objects.select_related('autor__rol')
+    return render(request, 'panel_administrador/consultas.html', {'consultas': consultas})
+
+
+@rol_requerido('administrador', login='cuentas:login_administradores')
+def panel_consulta_detalle(request, pk):
+    consulta = get_object_or_404(
+        Consulta.objects.select_related('autor__rol', 'respondida_por'), pk=pk
+    )
+    form = ResponderConsultaForm(request.POST or None, instance=consulta) if consulta.pendiente else None
+    if form and request.method == 'POST' and form.is_valid():
+        respuesta = form.save(commit=False)
+        respuesta.respondida_en = timezone.now()
+        respuesta.respondida_por = request.user
+        respuesta.save()
+        messages.success(request, f'Respuesta guardada para {consulta.codigo}.')
+        return redirect('cuentas:panel_consultas')
+    return render(request, 'panel_administrador/consulta_detalle.html',
+                  {'consulta': consulta, 'form': form})
