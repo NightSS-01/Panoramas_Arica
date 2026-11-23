@@ -62,7 +62,7 @@
       </div>
 
       {% if actividad.es_reservable %}
-        <a href="#" class="panel__boton">Reservar ahora →</a>
+        <a href="{% url 'reservas:iniciar' actividad.pk %}" class="panel__boton">Reservar ahora →</a>
         <p class="panel__nota">Completa los datos de los asistentes para continuar.</p>
       {% else %}
         <p class="panel__nota">Esta actividad no está disponible para reservar.</p>
