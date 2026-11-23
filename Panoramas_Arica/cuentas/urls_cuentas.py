@@ -19,4 +19,7 @@ urlpatterns = [
     path('panel/proveedores/<int:pk>/editar/', views.panel_proveedor_editar, name='panel_proveedor_editar'),
     path('panel/proveedores/<int:pk>/estado/', views.panel_proveedor_estado, name='panel_proveedor_estado'),
     path('panel/proveedores/<int:pk>/', views.panel_proveedor_detalle, name='panel_proveedor_detalle'),
+    path('consulta/enviar/', views.consulta_enviar, name='consulta_enviar'),
+    path('panel/consultas/', views.panel_consultas, name='panel_consultas'),
+    path('panel/consultas/<int:pk>/', views.panel_consulta_detalle, name='panel_consulta_detalle'),
 ]
