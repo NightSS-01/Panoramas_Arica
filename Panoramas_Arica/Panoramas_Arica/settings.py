@@ -29,11 +29,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'actividades',
+    'cuentas',
+    'reservas',
     'crispy_forms',
     'crispy_bootstrap5'
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-CRISPY_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,7 +66,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Panoramas_Arica.wsgi.application'
-
+AUTH_USER_MODEL = 'cuentas.Usuario'
+LOGIN_URL = 'cuentas:login'
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases

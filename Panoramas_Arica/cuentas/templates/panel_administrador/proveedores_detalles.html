@@ -1,0 +1,86 @@
+{% extends "panel_administrador/base.html" %}
+{% block titulo %}Detalle del proveedor{% endblock %}
+{% block contenido %}
+<div class="panel-cabecera">
+  <div>
+    <h2>{{ proveedor.organizacion }}</h2>
+    {% if proveedor.usuario.is_active %}
+      <span class="chip chip-activo">Activo</span>
+    {% else %}
+      <span class="chip chip-inactivo">Desactivado</span>
+    {% endif %}
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'cuentas:panel_proveedores' %}" class="btn-linea">Volver</a>
+    <a href="{% url 'cuentas:panel_proveedor_editar' proveedor.pk %}" class="btn-naranja">Editar</a>
+  </div>
+</div>
+
+<div class="panel-tarjeta p-4 mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="texto-suave">Responsable</div>
+      {{ proveedor.usuario.get_full_name|default:"Sin responsable" }}
+    </div>
+    <div class="col-md-3">
+      <div class="texto-suave">Correo</div>
+      {{ proveedor.usuario.email }}
+    </div>
+    <div class="col-md-3">
+      <div class="texto-suave">Teléfono</div>
+      {{ proveedor.telefono|default:"No registrado" }}
+    </div>
+    <div class="col-md-3">
+      <div class="texto-suave">Creado por</div>
+      {% if proveedor.creado_por %}{{ proveedor.creado_por.get_full_name|default:proveedor.creado_por.email }}{% else %}No registrado{% endif %}
+      · {{ proveedor.creado_en|date:"d/m/Y" }}
+    </div>
+  </div>
+</div>
+
+<div class="panel-tarjeta mb-4">
+  <div class="p-4 border-bottom">
+    <h5 class="mb-0">Actividades ({{ actividades|length }})</h5>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Actividad</th><th>Modalidad</th><th>Precio</th><th>Próxima fecha</th><th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in actividades %}
+        <tr>
+          <td>
+            <strong>{{ a.titulo }}</strong>
+            <div class="texto-suave">{{ a.ubicacion|default:"Sin ubicación" }}</div>
+          </td>
+          <td>{{ a.get_modalidad_display }}</td>
+          <td>{{ a.precio_texto }}</td>
+          <td>
+            {% with d=a.primera_disponibilidad %}
+              {% if d %}{{ d.fecha|date:"d/m/Y" }} · {{ d.cupos }} cupos{% else %}Sin fechas{% endif %}
+            {% endwith %}
+          </td>
+          <td>
+            {% if a.publicada %}
+              <span class="chip chip-activo">Publicada</span>
+            {% else %}
+              <span class="chip chip-inactivo">Oculta</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="texto-suave p-4">Este proveedor aún no tiene actividades.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="panel-tarjeta p-4">
+  <h5>Reservas</h5>
+  <p class="texto-suave mb-0">Las reservas de este proveedor se mostrarán aquí cuando el módulo de reservas esté listo.</p>
+</div>
+{% endblock %}

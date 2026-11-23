@@ -1,0 +1,38 @@
+<article class="tarjeta">
+  <div class="tarjeta__imagen" style="background-image: url('{{ a.imagen_url }}')">
+    <span class="tarjeta__badge {% if a.modalidad != 'reservable' %}tarjeta__badge--claro{% endif %}">{{ a.get_modalidad_display }}</span>
+    {% if a.ubicacion %}
+      <span class="tarjeta__lugar"><i class="bi bi-geo-alt"></i> {{ a.ubicacion }}</span>
+    {% endif %}
+  </div>
+
+  {% with d=a.primera_disponibilidad %}
+  <div class="tarjeta__cuerpo">
+    <div class="tarjeta__meta">
+      {% if d %}
+        <span><i class="bi bi-calendar3"></i> {{ d.fecha|date:"D, j M" }}</span>
+      {% endif %}
+    </div>
+
+    <h3 class="tarjeta__titulo">{{ a.titulo }}</h3>
+    <p class="tarjeta__texto">{{ a.descripcion|truncatechars:140 }}</p>
+
+    <div class="tarjeta__pie">
+      <div>
+        <small class="tarjeta__desde">Desde</small>
+        <p class="tarjeta__precio">{{ a.precio_texto }}{% if a.precio %} <span>CLP</span>{% endif %}</p>
+      </div>
+      <a href="{% url 'detalle' a.pk %}" class="tarjeta__flecha" aria-label="Ver detalles de {{ a.titulo }}"><i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="tarjeta__cupos">
+      {% if a.modalidad == 'difusion' %}
+        <span><i class="bi bi-megaphone"></i> Actividad de difusión</span>
+      {% elif d %}
+        <span><i class="bi bi-people"></i> {{ d.cupos }} cupos disponibles</span>
+      {% endif %}
+      <span class="tarjeta__punto"></span>
+    </div>
+  </div>
+  {% endwith %}
+</article>

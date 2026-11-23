@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel administrativo · Panoramas Arica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{% static 'css/panel.css' %}" rel="stylesheet">
+  <link href="{% static 'css/proveedores.css' %}" rel="stylesheet">
+</head>
+<body class="panel">
+  <div class="panel-layout">
+
+    <aside class="panel-lateral">
+      <div class="panel-marca">
+        <span class="panel-logo">P</span>
+        <div>
+          <small>ADMINISTRACIÓN</small>
+          <strong>Panoramas Arica</strong>
+        </div>
+      </div>
+
+      <nav class="panel-menu">
+        <a href="{% url 'cuentas:panel_admin' %}"
+           class="panel-enlace {% if request.resolver_match.url_name == 'panel_admin' %}activo{% endif %}">
+          <i class="bi bi-grid"></i> Resumen
+        </a>
+        <a href="{% url 'cuentas:panel_proveedores' %}" class="panel-enlace {% if request.resolver_match.url_name == 'panel_proveedores' %}activo{% endif %}"><i class="bi bi-buildings"></i> Proveedores</a>
+        <a href="#" class="panel-enlace"><i class="bi bi-calendar-check"></i> Reservas</a>
+        <a href="#" class="panel-enlace">
+          <i class="bi bi-chat-dots"></i> Consultas
+          {% if consultas_pendientes %}<span class="panel-contador">{{ consultas_pendientes }}</span>{% endif %}
+        </a>
+      </nav>
+
+      <div class="panel-tarjeta-usuario">
+        <strong>{{ user.get_full_name|default:user.email }}</strong>
+        <small>{{ user.perfil_administrador.cargo|default:"Administrador" }}</small>
+        <form method="post" action="{% url 'cuentas:salir' %}">
+          {% csrf_token %}
+          <button type="submit" class="panel-salir"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</button>
+        </form>
+      </div>
+    </aside>
+
+    <div class="panel-principal">
+      <header class="panel-encabezado">
+        <div>
+          <small class="panel-etiqueta">PANEL ADMINISTRATIVO</small>
+          <h1>{% block titulo %}Resumen{% endblock %}</h1>
+        </div>
+        <div class="panel-perfil">
+          <div class="text-end">
+            <strong>{{ user.get_full_name|default:user.email }}</strong>
+            <small>Sesión de administrador</small>
+          </div>
+          <span class="panel-avatar">{{ user.first_name|default:user.email|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}</span>
+        </div>
+      </header>
+
+      <main class="panel-contenido">
+      {% for mensaje in messages %}
+        <div class="alert alert-success">{{ mensaje }}</div>
+      {% endfor %}
+      {% block contenido %}{% endblock %}
+      </main>
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

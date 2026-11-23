@@ -1,24 +1,12 @@
-from functools import wraps
-
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.db.models import ProtectedError
-
+from cuentas.decorador import rol_requerido
 from .forms import ActividadForm
 
 
-def proveedor_requerido(vista):
-    @wraps(vista)
-    @login_required
-    def envoltura(request, *args, **kwargs):
-        if request.user.rol != 'proveedor':
-            raise PermissionDenied
-        return vista(request, *args, **kwargs)
-    return envoltura
-
+proveedor_requerido = rol_requerido('proveedor', login='cuentas:login_proveedores')
 
 def _render_panel(request, form, abrir_modal=False):
     actividades = (

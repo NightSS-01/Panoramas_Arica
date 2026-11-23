@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Resultado de tu reserva | Panoramas Arica{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center mt-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+        {% if reserva.exitosa %}
+          <h1 class="h3">¡Reserva confirmada!</h1>
+          <p class="text-muted">Guarda estos datos como comprobante.</p>
+        {% elif reserva.estado == 'anulada' %}
+          <h1 class="h3">Cancelaste el pago</h1>
+          <p class="text-muted">No se realizó ningún cobro y tu reserva no quedó confirmada.</p>
+        {% elif reserva.estado == 'sin_cupos' %}
+          <h1 class="h3">Pago recibido, pero ya no quedaban cupos</h1>
+          <p class="text-muted">Tu reserva no pudo confirmarse. Conserva el número de orden y contáctanos para gestionar la devolución.</p>
+        {% else %}
+          <h1 class="h3">No pudimos completar el pago</h1>
+          <p class="text-muted">No se realizó ningún cobro. Puedes intentarlo nuevamente.</p>
+        {% endif %}
+
+        <ul class="list-unstyled mt-4 mb-4">
+          <li><strong>Actividad:</strong> {{ reserva.actividad_titulo }}</li>
+          <li><strong>Fecha:</strong> {{ reserva.fecha|date:"j \d\e F \d\e Y" }}</li>
+          <li><strong>Personas:</strong> {{ reserva.cantidad }}</li>
+          <li><strong>Total:</strong> {{ reserva.monto_texto }}</li>
+          <li><strong>N.º de orden:</strong> {{ reserva.buy_order }}</li>
+          {% if reserva.codigo_autorizacion %}
+            <li><strong>Código de autorización:</strong> {{ reserva.codigo_autorizacion }}</li>
+          {% endif %}
+          <li><strong>Estado:</strong> {{ reserva.get_estado_display }}</li>
+        </ul>
+
+        {% if not reserva.exitosa and reserva.actividad_id %}
+          <a href="{% url 'reservas:iniciar' reserva.actividad_id %}" class="btn btn-pill btn-outline-pill">Intentar de nuevo</a>
+        {% endif %}
+        <a href="{% url 'inicio' %}" class="btn btn-pill btn-accent">Volver al inicio</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

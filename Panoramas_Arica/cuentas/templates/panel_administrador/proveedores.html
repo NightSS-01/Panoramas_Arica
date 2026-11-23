@@ -1,0 +1,79 @@
+{% extends "panel_administrador/base.html" %}
+{% load crispy_forms_tags %}
+{% block titulo %}Proveedores{% endblock %}
+{% block contenido %}
+<div class="panel-cabecera">
+  <div>
+    <h2>Proveedores</h2>
+    <p>Gestiona sus usuarios, fichas y accesos.</p>
+  </div>
+  <button type="button" class="btn-naranja" data-bs-toggle="modal" data-bs-target="#modalCrearProveedor">
+  + Crear proveedor
+</button>
+</div>
+
+<div class="panel-tarjeta">
+  <form method="get" class="panel-buscador">
+    <input type="search" name="q" value="{{ q }}"
+           placeholder="Buscar por empresa, responsable o correo...">
+  </form>
+
+  {% for p in proveedores %}
+  <div class="fila-proveedor">
+    <span class="avatar-org">{{ p.organizacion|slice:":2"|upper }}</span>
+    <div class="fila-datos">
+      <strong>{{ p.organizacion }}</strong>
+      <div class="texto-suave">
+        {{ p.usuario.get_full_name|default:"Sin responsable" }}{% if p.telefono %} · {{ p.telefono }}{% endif %}
+      </div>
+    </div>
+    <div class="fila-contacto">
+      <div>{{ p.usuario.email }}</div>
+      <div class="texto-suave">
+        {% if p.creado_por %}Creado por {{ p.creado_por.get_full_name|default:p.creado_por.email }}{% else %}Creador no registrado{% endif %}
+      </div>
+    </div>
+    <div class="fila-acciones">
+      {% if p.usuario.is_active %}
+        <span class="chip chip-activo">Activo</span>
+      {% else %}
+        <span class="chip chip-inactivo">Desactivado</span>
+      {% endif %}
+      <a href="{% url 'cuentas:panel_proveedor_detalle' p.pk %}" class="btn-linea">Ver detalle</a>
+      <a href="{% url 'cuentas:panel_proveedor_editar' p.pk %}" class="btn-linea">Editar</a>
+    </div>
+  </div>
+  {% empty %}
+  <p class="texto-suave p-4 mb-0">
+    {% if q %}Ningún proveedor coincide con «{{ q }}».{% else %}Aún no hay proveedores registrados.{% endif %}
+  </p>
+  {% endfor %}
+</div>
+<div class="modal fade" id="modalCrearProveedor" tabindex="-1" aria-labelledby="tituloCrearProveedor" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloCrearProveedor">Crear proveedor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          {{ form|crispy }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-linea" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-naranja">Crear proveedor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if abrir_modal %}
+<script>
+  new bootstrap.Modal(document.getElementById('modalCrearProveedor')).show();
+</script>
+{% endif %}
+{% endblock %}
