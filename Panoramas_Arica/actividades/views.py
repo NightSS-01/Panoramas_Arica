@@ -4,23 +4,42 @@ from django.views.decorators.http import require_POST
 from django.db.models import ProtectedError
 from cuentas.decorador import rol_requerido
 from .forms import ActividadForm, SolicitudSoporteForm
+from django.utils import timezone
 
 
 proveedor_requerido = rol_requerido('proveedor', login='cuentas:login_proveedores')
+
+def _clp(monto):
+    return '$' + f'{monto:,}'.replace(',', '.')
+
 
 def _render_panel(request, form=None, form_soporte=None, abrir_modal=False, abrir_soporte=False):
     actividades = (
         request.user.actividades
         .select_related('categoria')
-        .prefetch_related('disponibilidades')
+        .prefetch_related('disponibilidades', 'reservas__usuario')
     )
     if form is None:
         form = ActividadForm()
     if form_soporte is None:
         form_soporte = SolicitudSoporteForm(initial={'correo_contacto': request.user.email})
+
+    # Reservas de todas las actividades de este proveedor, las más nuevas primero
+    reservas = sorted(
+        (r for a in actividades for r in a.reservas.all()),
+        key=lambda r: r.creada_en,
+        reverse=True,
+    )
+    exitosas = [r for r in reservas if r.exitosa]
+    hoy = timezone.localdate()
+
     contexto = {
         'actividades': actividades,
         'total_publicadas': sum(1 for a in actividades if a.publicada),
+        'reservas': reservas,
+        'total_reservas': len(exitosas),
+        'ingresos_texto': _clp(sum(r.monto for r in exitosas)),
+        'cupos_reservados': sum(r.cantidad for r in exitosas if r.fecha >= hoy),
         'form': form,
         'form_soporte': form_soporte,
         'abrir_modal': abrir_modal,
@@ -73,15 +92,17 @@ def alternar_publicacion(request, pk):
 def eliminar_actividad(request, pk):
     actividad = get_object_or_404(request.user.actividades, pk=pk)
     titulo = actividad.titulo
-    try:
-        actividad.delete()
-    except ProtectedError:
+    # Reserva.actividad usa SET_NULL: la base no bloquea sola, se revisa aquí.
+    # Solo cuentan las reservas vigentes; las rechazadas o anuladas no impiden borrar.
+    if any(r.estado in ('pendiente', 'pagada', 'confirmada', 'sin_cupos')
+           for r in actividad.reservas.all()):
         messages.error(
             request,
-            f'No se puede eliminar {titulo} porque tiene reservas. Puedes ocultarla.',
+            f'No se puede eliminar «{titulo}» porque tiene reservas. Puedes ocultarla.',
         )
-    else:
-        messages.success(request, f'Actividad {titulo} eliminada.')
+        return redirect('actividades:panel')
+    actividad.delete()
+    messages.success(request, f'Actividad «{titulo}» eliminada.')
     return redirect('actividades:panel')
 
 

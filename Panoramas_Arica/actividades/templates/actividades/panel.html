@@ -39,8 +39,8 @@
         <span>Reservas totales</span>
         <span class="punto punto--acento"></span>
       </div>
-      <div class="tarjeta-resumen__valor">4</div>
-      <small>En todas tus actividades</small>
+      <div class="tarjeta-resumen__valor">{{ total_reservas }}</div>
+      <small>Pagadas o confirmadas</small>
     </article>
 
     <article class="tarjeta-resumen">
@@ -48,7 +48,7 @@
         <span>Ingresos confirmados</span>
         <span class="punto punto--verde"></span>
       </div>
-      <div class="tarjeta-resumen__valor">$60.000</div>
+      <div class="tarjeta-resumen__valor">{{ ingresos_texto }}</div>
       <small>Pagos completados</small>
     </article>
 
@@ -57,7 +57,7 @@
         <span>Cupos reservados</span>
         <span class="punto punto--acento"></span>
       </div>
-      <div class="tarjeta-resumen__valor">8</div>
+      <div class="tarjeta-resumen__valor">{{ cupos_reservados }}</div>
       <small>Próximas fechas</small>
     </article>
   </section>
@@ -69,7 +69,7 @@
     </button>
     <button class="panel-tab" id="tab-reservas" data-bs-toggle="tab"
             data-bs-target="#pane-reservas" type="button" role="tab">
-      Reservas y pagos <span class="panel-tab__contador">4</span>
+      Reservas y pagos <span class="panel-tab__contador">{{ reservas|length }}</span>
     </button>
   </nav>
 
@@ -155,42 +155,23 @@
               </tr>
             </thead>
             <tbody>
+              {% for r in reservas %}
               <tr>
-                <td class="tabla-reservas__codigo">PA-1048</td>
-                <td class="tabla-reservas__cliente">Camila González</td>
-                <td class="tabla-reservas__suave">Avistamiento de aves costeras</td>
-                <td class="tabla-reservas__suave">14 jun 2025</td>
-                <td class="tabla-reservas__suave">2</td>
-                <td class="tabla-reservas__total">$24.000</td>
-                <td><span class="pago pago--pagado">Pagado</span></td>
+                <td class="tabla-reservas__codigo">{{ r.buy_order }}</td>
+                <td class="tabla-reservas__cliente">{{ r.usuario.get_full_name|default:r.usuario.email }}</td>
+                <td class="tabla-reservas__suave">{{ r.actividad_titulo }}</td>
+                <td class="tabla-reservas__suave">{{ r.fecha|date:"j M Y" }}</td>
+                <td class="tabla-reservas__suave">{{ r.cantidad }}</td>
+                <td class="tabla-reservas__total">{{ r.monto_texto }}</td>
+                <td>
+                  <span class="pago {% if r.exitosa %}pago--pagado{% elif r.estado == 'pendiente' %}pago--pendiente{% elif r.estado == 'sin_cupos' %}pago--alerta{% else %}pago--fallido{% endif %}">{{ r.get_estado_display }}</span>
+                </td>
               </tr>
+              {% empty %}
               <tr>
-                <td class="tabla-reservas__codigo">PA-1047</td>
-                <td class="tabla-reservas__cliente">Felipe Muñoz</td>
-                <td class="tabla-reservas__suave">Trekking Cuevas de Anzota</td>
-                <td class="tabla-reservas__suave">8 jun 2025</td>
-                <td class="tabla-reservas__suave">1</td>
-                <td class="tabla-reservas__total">$18.000</td>
-                <td><span class="pago pago--pendiente">Pendiente</span></td>
+                <td colspan="7" class="tabla-reservas__vacio">Aún no hay reservas en tus actividades.</td>
               </tr>
-              <tr>
-                <td class="tabla-reservas__codigo">PA-1041</td>
-                <td class="tabla-reservas__cliente">Daniela Soto</td>
-                <td class="tabla-reservas__suave">Avistamiento de aves costeras</td>
-                <td class="tabla-reservas__suave">14 jun 2025</td>
-                <td class="tabla-reservas__suave">3</td>
-                <td class="tabla-reservas__total">$36.000</td>
-                <td><span class="pago pago--pagado">Pagado</span></td>
-              </tr>
-              <tr>
-                <td class="tabla-reservas__codigo">PA-1036</td>
-                <td class="tabla-reservas__cliente">Tomás Herrera</td>
-                <td class="tabla-reservas__suave">Trekking Cuevas de Anzota</td>
-                <td class="tabla-reservas__suave">8 jun 2025</td>
-                <td class="tabla-reservas__suave">2</td>
-                <td class="tabla-reservas__total">$36.000</td>
-                <td><span class="pago pago--reembolsado">Reembolsado</span></td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
