@@ -3,29 +3,35 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.db.models import ProtectedError
 from cuentas.decorador import rol_requerido
-from .forms import ActividadForm
+from .forms import ActividadForm, SolicitudSoporteForm
 
 
 proveedor_requerido = rol_requerido('proveedor', login='cuentas:login_proveedores')
 
-def _render_panel(request, form, abrir_modal=False):
+def _render_panel(request, form=None, form_soporte=None, abrir_modal=False, abrir_soporte=False):
     actividades = (
         request.user.actividades
         .select_related('categoria')
         .prefetch_related('disponibilidades')
     )
+    if form is None:
+        form = ActividadForm()
+    if form_soporte is None:
+        form_soporte = SolicitudSoporteForm(initial={'correo_contacto': request.user.email})
     contexto = {
         'actividades': actividades,
         'total_publicadas': sum(1 for a in actividades if a.publicada),
         'form': form,
+        'form_soporte': form_soporte,
         'abrir_modal': abrir_modal,
+        'abrir_soporte': abrir_soporte,
     }
     return render(request, 'actividades/panel.html', contexto)
 
 
 @proveedor_requerido
 def panel_proveedor(request):
-    return _render_panel(request, ActividadForm())
+    return _render_panel(request)
 
 
 @proveedor_requerido
@@ -77,3 +83,16 @@ def eliminar_actividad(request, pk):
     else:
         messages.success(request, f'Actividad {titulo} eliminada.')
     return redirect('actividades:panel')
+
+
+@proveedor_requerido
+@require_POST
+def solicitar_soporte(request):
+    form = SolicitudSoporteForm(request.POST)
+    if form.is_valid():
+        solicitud = form.save(commit=False)
+        solicitud.proveedor = request.user
+        solicitud.save()
+        messages.success(request, 'Recibimos tu solicitud de soporte.')
+        return redirect('actividades:panel')
+    return _render_panel(request, form_soporte=form, abrir_soporte=True)
