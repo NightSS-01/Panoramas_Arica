@@ -742,3 +742,17 @@ a.btn-fila {
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
 }
+
+.pago--fallido { background: #fdeceb; color: #b42318; }
+.pago--alerta { background: #ffe6d5; color: #9a3412; }
+
+.tabla-reservas__codigo {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.tabla-reservas__vacio {
+  text-align: center;
+  color: #6b6b6b;
+  padding: 2rem 1.5rem;
+}
