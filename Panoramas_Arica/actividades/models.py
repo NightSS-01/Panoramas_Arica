@@ -93,3 +93,37 @@ class Disponibilidad(models.Model):
 
     def __str__(self):
         return f'{self.actividad} · {self.fecha} · {self.cupos} cupos'
+
+
+class SolicitudSoporte(models.Model):
+    class Tipo(models.TextChoices):
+        PUBLICACION = 'publicacion', 'Problema con una publicación'
+        RESERVAS = 'reservas', 'Reservas o asistentes'
+        PAGOS = 'pagos', 'Pagos y transferencias'
+        ACCESO = 'acceso', 'Acceso a mi cuenta'
+        OTRO = 'otro', 'Otro problema'
+
+    class Estado(models.TextChoices):
+        NUEVA = 'nueva', 'Nueva'
+        ATENDIDA = 'atendida', 'Atendida'
+
+    proveedor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='solicitudes_soporte',
+    )
+    tipo = models.CharField(max_length=20, choices=Tipo.choices)
+    descripcion = models.TextField()
+    correo_contacto = models.EmailField()
+    estado = models.CharField(
+        max_length=10, choices=Estado.choices, default=Estado.NUEVA
+    )
+    creada_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-creada_en']
+        verbose_name = 'solicitud de soporte'
+        verbose_name_plural = 'solicitudes de soporte'
+
+    def __str__(self):
+        return f'{self.get_tipo_display()} · {self.proveedor}'

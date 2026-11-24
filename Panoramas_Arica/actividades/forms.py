@@ -2,7 +2,7 @@ from django import forms
 from django.db import transaction
 from django.utils import timezone
 
-from .models import Actividad, Disponibilidad
+from .models import Actividad, Disponibilidad, SolicitudSoporte
 
 
 class ActividadForm(forms.ModelForm):
@@ -94,3 +94,27 @@ class ActividadForm(forms.ModelForm):
         elif existente:
             existente.delete()
         return actividad
+
+
+class SolicitudSoporteForm(forms.ModelForm):
+    class Meta:
+        model = SolicitudSoporte
+        fields = ['tipo', 'descripcion', 'correo_contacto']
+        widgets = {
+            'descripcion': forms.Textarea(attrs={
+                'rows': 5,
+                'placeholder': 'Cuéntanos qué ocurrió e incluye todos los detalles que puedan ayudarnos…',
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        # Prefijo en los id: ambos formularios están en la misma página y los dos
+        # tienen un campo "descripcion"; sin esto repetirían el id id_descripcion.
+        kwargs.setdefault('auto_id', 'sop_%s')
+        super().__init__(*args, **kwargs)
+        for campo in self.fields.values():
+            campo.widget.attrs['class'] = 'campo__control'
+        self.fields['tipo'].choices = [
+            ('', 'Selecciona una categoría'),
+            *SolicitudSoporte.Tipo.choices,
+        ]
