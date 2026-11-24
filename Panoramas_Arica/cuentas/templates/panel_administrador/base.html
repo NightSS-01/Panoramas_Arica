@@ -28,7 +28,9 @@
           <i class="bi bi-grid"></i> Resumen
         </a>
         <a href="{% url 'cuentas:panel_proveedores' %}" class="panel-enlace {% if request.resolver_match.url_name == 'panel_proveedores' %}activo{% endif %}"><i class="bi bi-buildings"></i> Proveedores</a>
-        <a href="#" class="panel-enlace"><i class="bi bi-calendar-check"></i> Reservas</a>
+        <a href="{% url 'cuentas:panel_reservas' %}" class="panel-enlace {% if request.resolver_match.url_name == 'panel_reservas' %}activo{% endif %}">
+          <i class="bi bi-calendar-check"></i> Reservas
+        </a>
         <a href="{% url 'cuentas:panel_consultas' %}"
             class="panel-enlace {% if request.resolver_match.url_name == 'panel_consultas' or request.resolver_match.url_name == 'panel_consulta_detalle' %}activo{% endif %}">
           <i class="bi bi-chat-dots"></i> Consultas
