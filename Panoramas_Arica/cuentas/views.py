@@ -12,6 +12,7 @@ from .decorador import rol_requerido
 from .forms_cuentas import RegistroForm, LoginForm, CrearProveedorForm, EditarProveedorForm, ConsultaForm, ResponderConsultaForm
 from .models import Proveedor, Consulta
 from actividades.models import Actividad
+from reservas.models import Reserva
 DESTINOS = {
     'usuario': 'inicio',
     'proveedor': 'actividades:panel',
@@ -152,3 +153,10 @@ def panel_consulta_detalle(request, pk):
         return redirect('cuentas:panel_consultas')
     return render(request, 'panel_administrador/consulta_detalle.html',
                   {'consulta': consulta, 'form': form})
+
+@rol_requerido('administrador', login='cuentas:login_administradores')
+def panel_reservas(request):
+    reservas = Reserva.objects.select_related(
+        'usuario', 'actividad__proveedor__perfil_proveedor'
+    )
+    return render(request, 'panel_administrador/reservas.html', {'reservas': reservas})

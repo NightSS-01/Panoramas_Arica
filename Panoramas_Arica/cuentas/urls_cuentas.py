@@ -22,4 +22,5 @@ urlpatterns = [
     path('consulta/enviar/', views.consulta_enviar, name='consulta_enviar'),
     path('panel/consultas/', views.panel_consultas, name='panel_consultas'),
     path('panel/consultas/<int:pk>/', views.panel_consulta_detalle, name='panel_consulta_detalle'),
+    path('panel/reservas/', views.panel_reservas, name='panel_reservas'),
 ]
