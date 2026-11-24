@@ -33,3 +33,7 @@
 .item-atencion { display: block; background: #2A2A2A; border-radius: 12px; padding: 12px 16px; margin-top: 10px; color: #fff; text-decoration: none; }
 .item-atencion small { display: block; color: #9a9a9a; }
 .item-atencion:hover { background: #333; color: #fff; }
+.codigo-reserva { color: var(--naranja); font-weight: 700; }
+.chip-pagada, .chip-confirmada { background: #E6F6EE; color: #0B7A43; }
+.chip-rechazada, .chip-sin_cupos { background: #FDE8E8; color: #B42318; }
+.chip-anulada, .chip-cancelada { background: #EEE; color: #555; }
