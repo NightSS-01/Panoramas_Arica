@@ -1,0 +1,38 @@
+:root {
+  --mr-acento: #E84700;
+  --mr-texto: #1A1A1A;
+  --mr-suave: #6B6B6B;
+  --mr-borde: #E7E7E3;
+  --mr-fondo: #F7F7F5;
+}
+
+/* Encabezado */
+.mr-encabezado { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.mr-etiqueta { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .12em; color: var(--mr-acento); }
+.mr-titulo { margin: 4px 0; font-size: 2rem; font-weight: 700; color: var(--mr-texto); }
+.mr-subtitulo { margin: 0; color: var(--mr-suave); }
+.mr-boton-claro { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--mr-borde); border-radius: 999px; background: #fff; color: var(--mr-texto); font-weight: 600; text-decoration: none; }
+.mr-boton-claro:hover { background: var(--mr-fondo); color: var(--mr-texto); }
+
+/* Pestañas */
+.mr-pestanas { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--mr-borde); }
+.mr-pestana { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 2px solid transparent; color: var(--mr-suave); font-weight: 600; text-decoration: none; }
+.mr-pestana:hover { color: var(--mr-texto); }
+.mr-pestana--activa { color: var(--mr-texto); border-bottom-color: var(--mr-acento); }
+.mr-contador { padding: 1px 8px; border-radius: 999px; background: #EEE; font-size: 12px; }
+
+/* Tarjeta de reserva */
+.mr-tarjeta { display: grid; grid-template-columns: 260px 1fr; margin-bottom: 20px; overflow: hidden; border: 1px solid var(--mr-borde); border-radius: 20px; background: #fff; }
+.mr-tarjeta__imagen { position: relative; min-height: 200px; background-color: #EEE; background-position: center; background-size: cover; }
+.mr-badge { position: absolute; top: 12px; left: 12px; padding: 4px 12px; border-radius: 999px; background: #fff; color: var(--mr-texto); font-size: 12px; font-weight: 600; }
+.mr-tarjeta__cuerpo { display: flex; flex-direction: column; gap: 16px; padding: 24px; }
+.mr-tarjeta__superior { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.mr-codigo { margin: 0 0 4px; font-size: 12px; font-weight: 700; letter-spacing: .08em; color: var(--mr-acento); }
+.mr-tarjeta__titulo { margin: 0; font-size: 1.35rem; font-weight: 700; color: var(--mr-texto); }
+.mr-proveedor { margin: 4px 0 0; color: var(--mr-suave); }
+.mr-total { text-align: right; }
+.mr-total small { display: block; color: var(--mr-suave); }
+.mr-total p { margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--mr-texto); }
+.mr-total span { font-size: .8rem; font-weight: 400; color: var(--mr-suave); }
+
+/* Datos de la
