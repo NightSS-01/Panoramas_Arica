@@ -8,6 +8,9 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from transbank.error.transbank_error import TransbankError
 
+from django.db.models import Q
+from django.utils import timezone
+
 from actividades.models import Actividad, Disponibilidad
 from cuentas.decorador import rol_requerido
 
@@ -169,3 +172,24 @@ def _confirmar_pago(reserva):
 def resultado(request, pk):
     reserva = get_object_or_404(Reserva, pk=pk, usuario=request.user)
     return render(request, 'reservas/resultado.html', {'reserva': reserva})
+
+@rol_requerido('usuario')
+def mis_reservas(request):
+    pestana = 'historial' if request.GET.get('pestana') == 'historial' else 'proximas'
+    hoy = timezone.localdate()
+    vigentes = Q(
+        estado__in=[Reserva.Estado.PENDIENTE, Reserva.Estado.PAGADA,
+                    Reserva.Estado.CONFIRMADA, Reserva.Estado.SIN_CUPOS],
+        fecha__gte=hoy,
+    )
+    propias = Reserva.objects.filter(usuario=request.user).select_related(
+        'actividad__proveedor__perfil_proveedor'
+    )
+    proximas = propias.filter(vigentes).order_by('fecha')
+    historial = propias.exclude(vigentes)
+    return render(request, 'reservas/mis_reservas.html', {
+        'pestana': pestana,
+        'reservas': proximas if pestana == 'proximas' else historial,
+        'total_proximas': proximas.count(),
+        'total_historial': historial.count(),
+    })
