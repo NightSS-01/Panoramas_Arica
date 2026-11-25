@@ -166,7 +166,6 @@
                 <td>
                   <span class="pago {% if r.exitosa %}pago--pagado{% elif r.estado == 'pendiente' %}pago--pendiente{% elif r.estado == 'sin_cupos' %}pago--alerta{% else %}pago--fallido{% endif %}">{{ r.get_estado_display }}</span>
                 </td>
-                <td colspan="7" class="tabla-reservas__vacio">Aún no hay reservas en tus actividades.</td>
               </tr>
               {% endfor %}
             </tbody>
