@@ -67,13 +67,12 @@ def alternar_publicacion(request, pk):
 def eliminar_actividad(request, pk):
     actividad = get_object_or_404(request.user.actividades, pk=pk)
     titulo = actividad.titulo
-    try:
-        actividad.delete()
-    except ProtectedError:
+    if actividad.reservas.exists():
         messages.error(
             request,
-            f'No se puede eliminar {titulo} porque tiene reservas. Puedes ocultarla.',
+            f'No se puede eliminar «{titulo}» porque tiene reservas. Puedes ocultarla.',
         )
     else:
-        messages.success(request, f'Actividad {titulo} eliminada.')
+        actividad.delete()
+        messages.success(request, f'Actividad «{titulo}» eliminada.')
     return redirect('actividades:panel')
