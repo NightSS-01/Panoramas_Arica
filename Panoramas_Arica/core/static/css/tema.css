@@ -1,0 +1,460 @@
+/* =========================================================
+   TEMA VISUAL · Panoramas Arica
+   Naranja = principal · Negro = secundario · Blanco = fondos
+
+   Esta hoja se carga AL FINAL de las demás, así que solo
+   redefine colores y detalles visuales. No cambia la lógica.
+   Para volver al diseño anterior basta quitar sus 3 <link>.
+   ========================================================= */
+
+/* ---------- 1. Paleta (cambia aquí y se actualiza todo) ---------- */
+:root {
+  --tema-naranja: #ee4d07;
+  --tema-naranja-oscuro: #c93d00;
+  --tema-naranja-claro: #ff7a3c;   /* para textos sobre fondo oscuro */
+  --tema-naranja-suave: #fff1e8;
+  --tema-negro: #111111;
+  --tema-negro-profundo: #0b0b0b;
+  --tema-blanco: #ffffff;
+  --tema-gris: #5c5c5c;
+  --tema-gris-claro: #8a8a8a;
+  --tema-borde: #e6e6e6;
+  --tema-fondo-suave: #f6f6f6;     /* fondo de paneles, para que se vean las tarjetas blancas */
+
+  /* Variables que ya usan las otras hojas de estilo */
+  --color-acento: var(--tema-naranja);
+  --color-fondo: var(--tema-blanco);
+  --color-borde: var(--tema-borde);
+  --color-texto: var(--tema-negro);
+
+  --naranja: var(--tema-naranja);
+  --negro: var(--tema-negro-profundo);
+  --fondo: var(--tema-fondo-suave);
+  --borde: var(--tema-borde);
+  --texto: var(--tema-negro);
+  --texto-suave: var(--tema-gris);
+
+  --prov-naranja: var(--tema-naranja);
+  --prov-naranja-osc: var(--tema-naranja-oscuro);
+}
+
+/* ---------- 2. Base ---------- */
+body {
+  background: var(--tema-blanco);
+  color: var(--tema-negro);
+}
+
+::selection {
+  background: var(--tema-naranja);
+  color: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--tema-naranja);
+  box-shadow: 0 0 0 0.2rem rgba(238, 77, 7, 0.18);
+}
+
+/* ---------- 3. Botones ---------- */
+/* Principal: naranja, y negro al pasar el mouse */
+.btn-accent,
+.buscador__boton,
+.panel__boton,
+.soporte__boton,
+.btn-naranja,
+.btn-panel--acento,
+.prov-boton {
+  background: var(--tema-naranja);
+  border-color: var(--tema-naranja);
+  color: #fff;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-accent:hover,
+.buscador__boton:hover,
+.panel__boton:hover,
+.soporte__boton:hover,
+.btn-naranja:hover,
+.btn-panel--acento:hover,
+.prov-boton:hover {
+  background: var(--tema-negro);
+  border-color: var(--tema-negro);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Secundario: contorno negro, relleno negro al pasar el mouse */
+.btn-outline-pill,
+.btn-linea,
+.btn-panel--claro,
+.btn-fila:not(.btn-fila--peligro):not(.btn-fila--gris) {
+  background: var(--tema-blanco);
+  border: 1.5px solid var(--tema-negro);
+  color: var(--tema-negro);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.btn-outline-pill:hover,
+.btn-linea:hover,
+.btn-panel--claro:hover,
+.btn-fila:not(.btn-fila--peligro):not(.btn-fila--gris):hover {
+  background: var(--tema-negro);
+  color: #fff;
+}
+
+/* ---------- 4. Barra de navegación ---------- */
+.app-navbar {
+  background: var(--tema-blanco);
+  border-bottom: 3px solid var(--tema-naranja);
+}
+
+.brand-name {
+  color: var(--tema-negro);
+}
+
+.app-navbar .nav-link {
+  color: var(--tema-negro);
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.app-navbar .nav-link:hover {
+  color: var(--tema-naranja);
+}
+
+/* ---------- 5. Portada (hero) y buscador ---------- */
+.hero {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.1) 100%),
+    url('image/imagen_hero.jpg') bottom / cover no-repeat;
+}
+
+.hero__etiqueta,
+.hero__acento {
+  color: var(--tema-naranja-claro);
+}
+
+.buscador {
+  background: var(--tema-blanco);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.buscador__etiqueta {
+  color: var(--tema-negro);
+  font-weight: 700;
+}
+
+.buscador__campo {
+  border-color: var(--tema-borde);
+}
+
+/* ---------- 6. Listado de panoramas y tarjetas ---------- */
+.panoramas__etiqueta {
+  color: var(--tema-naranja);
+  font-weight: 700;
+}
+
+.panoramas__titulo {
+  color: var(--tema-negro);
+}
+
+.panoramas__titulo::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 0.6rem;
+  border-radius: 2px;
+  background: var(--tema-naranja);
+}
+
+.panoramas__subtitulo,
+.panoramas__contador {
+  color: var(--tema-gris);
+}
+
+.tarjeta {
+  background: var(--tema-blanco);
+  border: 1px solid var(--tema-borde);
+  border-radius: 20px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  border-color: var(--tema-naranja);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+}
+
+.tarjeta__badge {
+  background: var(--tema-naranja);
+  color: #fff;
+}
+
+.tarjeta__badge--claro {
+  background: var(--tema-blanco);
+  color: var(--tema-negro);
+}
+
+.tarjeta__lugar {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.tarjeta__titulo,
+.tarjeta__precio {
+  color: var(--tema-negro);
+}
+
+.tarjeta__meta,
+.tarjeta__texto {
+  color: var(--tema-gris);
+}
+
+.tarjeta__meta i,
+.tarjeta__cupos i {
+  color: var(--tema-naranja);
+}
+
+.tarjeta__flecha {
+  background: var(--tema-negro);
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+.tarjeta__flecha:hover {
+  background: var(--tema-naranja);
+  color: #fff;
+}
+
+.tarjeta__cupos {
+  background: var(--tema-fondo-suave);
+  color: var(--tema-gris);
+}
+
+.tarjeta__punto {
+  background: var(--tema-naranja);
+}
+
+/* ---------- 7. Detalle de la actividad ---------- */
+.detalle__volver,
+.detalle__lugar,
+.detalle__texto {
+  color: var(--tema-gris);
+}
+
+.detalle__volver:hover {
+  color: var(--tema-naranja);
+}
+
+.detalle__titulo {
+  color: var(--tema-negro);
+}
+
+.detalle__etiqueta {
+  color: var(--tema-naranja);
+}
+
+.detalle__precio-caja {
+  border-color: var(--tema-borde);
+}
+
+.detalle__check {
+  background: var(--tema-naranja-suave);
+  color: var(--tema-naranja);
+}
+
+.detalle__recomendacion {
+  background: var(--tema-negro-profundo);
+  color: #fff;
+}
+
+.detalle__recomendacion-etiqueta {
+  color: var(--tema-naranja-claro);
+}
+
+.galeria__principal,
+.galeria__mini {
+  border-radius: 20px;
+}
+
+/* Tarjeta lateral con fecha, cupos y botón de reservar.
+   Se limita a "aside" porque el panel de administrador usa otra clase .panel */
+aside.col-lg-4 > .panel {
+  border-color: var(--tema-borde);
+  border-top: 4px solid var(--tema-naranja);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.panel__titulo {
+  color: var(--tema-naranja);
+}
+
+.panel__icono {
+  background: var(--tema-naranja-suave);
+  color: var(--tema-naranja);
+}
+
+.panel__lista small,
+.panel__total small,
+.panel__nota {
+  color: var(--tema-gris-claro);
+}
+
+/* ---------- 8. Reservas (tarjetas de Bootstrap) ---------- */
+main .card {
+  box-shadow: 0 0 0 1px var(--tema-borde), 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ---------- 9. Ayuda / soporte ---------- */
+.soporte__contenido {
+  border-color: var(--tema-borde);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+}
+
+.soporte__etiqueta {
+  color: var(--tema-naranja);
+}
+
+/* ---------- 10. Pie de página ---------- */
+.app-footer {
+  background: var(--tema-negro-profundo);
+  color: #bdbdbd;
+  border-top: 4px solid var(--tema-naranja);
+}
+
+.footer-marca,
+.footer-titulo {
+  color: #fff;
+}
+
+.footer-kicker {
+  color: var(--tema-naranja-claro);
+}
+
+.footer-lista a,
+.footer-colaboradores {
+  color: #bdbdbd;
+}
+
+.footer-lista a:hover {
+  color: var(--tema-naranja-claro);
+}
+
+.footer-social {
+  border-color: #3a3a3a;
+  color: #bdbdbd;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-social:hover {
+  background: var(--tema-naranja);
+  border-color: var(--tema-naranja);
+  color: #fff;
+}
+
+.footer-linea {
+  border-color: #2b2b2b;
+}
+
+/* ---------- 11. Inicio de sesión y registro ---------- */
+.auth-card {
+  border-color: var(--tema-borde);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+}
+
+.auth-kicker,
+.auth-enlace {
+  color: var(--tema-naranja);
+}
+
+.auth-enlace:hover {
+  color: var(--tema-negro);
+}
+
+.auth-kicker-claro {
+  color: var(--tema-naranja-claro);
+}
+
+.auth-check {
+  background: var(--tema-naranja);
+}
+
+.auth-volver {
+  color: var(--tema-gris);
+}
+
+.auth-separador {
+  color: var(--tema-gris-claro);
+}
+
+.auth-aviso {
+  background: var(--tema-fondo-suave);
+  color: var(--tema-gris);
+}
+
+/* Login de proveedores y administradores */
+body:has(.prov-login) {
+  background-color: var(--tema-blanco);
+}
+
+.prov-card {
+  box-shadow: 0 0 0 1px var(--tema-borde), 0 16px 40px rgba(0, 0, 0, 0.1);
+}
+
+.prov-bajada {
+  color: var(--tema-gris);
+}
+
+/* ---------- 12. Panel de administrador ---------- */
+.panel-encabezado {
+  border-bottom-color: var(--tema-borde);
+}
+
+.panel-tarjeta {
+  border-color: var(--tema-borde);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-org {
+  background: var(--tema-naranja-suave);
+  color: var(--tema-naranja-oscuro);
+}
+
+/* ---------- 13. Panel de proveedor ---------- */
+.proveedor-body {
+  background: var(--tema-fondo-suave);
+  color: var(--tema-negro);
+}
+
+.proveedor-avatar {
+  background: var(--tema-negro);
+}
+
+.tarjeta-resumen,
+.lista-card,
+.form-pagina,
+.vista-previa {
+  border-color: var(--tema-borde);
+}
+
+.etiqueta-modalidad {
+  background: var(--tema-naranja-suave);
+  color: var(--tema-naranja-oscuro);
+}
+
+.tabla-reservas__codigo {
+  color: var(--tema-naranja-oscuro);
+}
+
+.panel-tab.active {
+  color: var(--tema-naranja);
+  border-bottom-color: var(--tema-naranja);
+}
+
+.modal-actividad__cuerpo {
+  background: var(--tema-blanco);
+}
+
+.modal-backdrop.show {
+  background: rgba(0, 0, 0, 0.55);
+}
