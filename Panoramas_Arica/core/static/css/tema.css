@@ -126,7 +126,7 @@ body {
 .hero {
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.1) 100%),
-    url('image/imagen_hero.jpg') bottom / cover no-repeat;
+    url('../image/imagen_hero.jpg') bottom / cover no-repeat;
 }
 
 .hero__etiqueta,

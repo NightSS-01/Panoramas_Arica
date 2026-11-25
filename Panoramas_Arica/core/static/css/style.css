@@ -160,7 +160,7 @@ body {
   color: #fff;
   background:
     linear-gradient(180deg, rgba(20, 16, 12, 0) 35%, rgba(20, 16, 12, 0.85)),
-    url('../images/hero.jpg') center / cover;
+    url('../image/atardecermorro.svg') center / cover;
 }
 
 .auth-kicker-claro {
@@ -277,9 +277,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background:
-    linear-gradient(90deg, rgba(20, 16, 12, 0.55), rgba(20, 16, 12, 0.1)),
-    url('../image/imagen_hero.jpg') bottom / cover no-repeat;
 }
 
 .hero__contenido {
